@@ -12,7 +12,7 @@ class User(db.Model):
     avatar: Mapped[str] = mapped_column(String(120), nullable = False, default = "")
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(200), nullable=False)
-    salt: Mapped[str] = mapped_column(String(80), nullable = False, default = 1 )   # Paso extra de complejidad a la BD del usuario
+    salt: Mapped[str] = mapped_column(String(80), nullable = False, default = 1 )
 
     def serialize(self):
         return {
@@ -20,6 +20,6 @@ class User(db.Model):
             "full_name": self.first_name,
             "avatar": self.avatar,
             "email": self.email,
-            "salt": self.salt,     # Es un pedazo de hash extra que se agrega al password original para mayor seguridad (por si echan el hash hacia atras)
+            "salt": self.salt,     
             # do not serialize the password, its a security breach
         }

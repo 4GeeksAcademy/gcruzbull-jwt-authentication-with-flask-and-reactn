@@ -31,7 +31,4 @@ def setup_commands(app):
 
     @app.cli.command("insert-test-data")
     def insert_test_data():
-        pass
-
-"""Edita la línea 32 de la función insert_test_data para insertar los datos según tu modelo (usa la función insert_test_users anterior como ejemplo). 
-Luego, todo lo que necesitas hacer es ejecutar pipenv run insert-test-data."""    
+        pass   

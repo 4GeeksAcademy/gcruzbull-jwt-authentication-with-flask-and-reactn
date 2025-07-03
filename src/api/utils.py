@@ -1,9 +1,9 @@
 from flask import jsonify, url_for
 import os
-from email.mime.text import MIMEText                # con esto puedo lograr enviar un mensaje con html
+from email.mime.text import MIMEText                
 from email.mime.multipart import MIMEMultipart
 import smtplib
-import ssl          # para mandar los correos de forma segura
+import ssl          
 
 class APIException(Exception):
     status_code = 400
@@ -51,12 +51,12 @@ def send_email(subject, to, body_message):
     smtp_address = os.getenv("SMTP_ADDRESS")
     smtp_port = os.getenv("SMTP_PORT")
     email_address = os.getenv("EMAIL_ADDRESS")
-    email_password = os.getenv("EMAIL_PASSWORD")   # contraseña entregada al crear una nueva contraseña en "contraseñas de aplicación"
+    email_password = os.getenv("EMAIL_PASSWORD")   
 
     message = MIMEMultipart("alternative")
-    message["Subject"] = subject                            # El sujeto, quien envia el mensaje
-    message["From"] = "correo.electronico@gmail.com"        # Desde donde se enviara el correo, desde que correo se va a mandar el mensaje
-    message["To"] = to                                      # A quien le envio el correo
+    message["Subject"] = subject                            
+    message["From"] = "correo.electronico@gmail.com"        
+    message["To"] = to                                      
 
     html = """
         <html>
@@ -66,15 +66,15 @@ def send_email(subject, to, body_message):
         </html>
     """
 
-    html_mime = MIMEText(html, "html")          # Para enviar el mensaje de la variable html que defini como un html
+    html_mime = MIMEText(html, "html")          
 
-    message.attach(html_mime)                   # Estoy pegando el mensaje al correo
+    message.attach(html_mime)                   
 
     try:
         context = ssl.create_default_context()
-        with smtplib.SMTP_SSL(smtp_address, smtp_port, context = context) as server:       # Acá le indico como quiero que el servidor abra el correo
+        with smtplib.SMTP_SSL(smtp_address, smtp_port, context = context) as server:
             server.login(email_address, email_password)
-            server.sendmail(email_address, to, message.as_string())     # uso el as_string() para evitar que se rompa el mensaje si hay acentos en él.
+            server.sendmail(email_address, to, message.as_string())     
             return True
     except Exception as error:
         print(str(error))

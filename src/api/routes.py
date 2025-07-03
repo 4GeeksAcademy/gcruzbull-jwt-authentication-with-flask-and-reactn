@@ -19,7 +19,7 @@ CORS(api)
 
 # Manejo del Hash de la contraseña creando 2 funciones
 
-def set_password (password, salt):
+def create_password (password, salt):
     return generate_password_hash(f"{password}{salt}")
 
 def check_password(password_hash, password, salt):
@@ -28,8 +28,8 @@ def check_password(password_hash, password, salt):
 # Acá termina el manejo del Hash.
 
 # Duración de vida del token
-expires_token = 20                                  # tiempo que durara activo el token
-expires_delta = timedelta(minutes=expires_token)    # En este caso determino que sea en minutos, con una duración de 20 min.
+expires_token = 20                                  
+expires_delta = timedelta(minutes=expires_token)
 
 @api.route('/healt-check', methods=['GET'])
 def handle_hello():
@@ -50,7 +50,7 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-@api.route('/signup', methods = ['POST'])  # El metodo es POST porque le estoy enviando informacion al body (o data), además estoy creando un usuario
+@api.route('/signup', methods = ['POST'])
 def add_user():
     body = request.json()
 
@@ -65,10 +65,8 @@ def add_user():
         user = User()           
         User.email = email
         User.full_name = full_name
-        User.password = set_password(password)
-        User.salt = b64encode(os.urandom(32)).decode("utf-8")    # urandom genera un hash a partir del número 32
-
-        # user = User(email = email, full_name = full_name, password = password)    Forma 2 de crear el usuario
+        User.password = create_password(password)
+        User.salt = b64encode(os.urandom(32)).decode("utf-8")
 
     # Transacción a la BD:
     db.session.add(user)
@@ -81,7 +79,7 @@ def add_user():
         return jsonify(f"Error: {error.args}"), 500
         
     
-@api.route('/login', methods = ['POST'])    # Es POST porque estoy enviando información (correo y password).
+@api.route('/login', methods = ['POST'])
 def handle_login():
     data = request.json
     email = data.get("email", None)
@@ -92,7 +90,7 @@ def handle_login():
 
     # Validamos existencia del usuario
     else:
-        user = User.query.filter_by(email=email).one_or_none()     # one_or_none es una alternativa al first(), arroja None, 1, o error (si hay más de 1).
+        user = User.query.filter_by(email=email).one_or_none()
         if user is None:
             return jsonify("Credentials are wrong, try again"), 400
         else:
@@ -104,8 +102,8 @@ def handle_login():
                 return jsonify("Credentials failure"), 400
             
 
-@api.route("/users", methods=["GET"])     # Es GET porque estoy me va a traer todos los usuarios.
-@jwt_required()                           # Para que solo los usuarios autenticados puedan ver a los otros usuarios, entonces así protejo la ruta.
+@api.route("/users", methods=["GET"])     
+@jwt_required()                           
 def get_all_users():
     users = User.query.all()
     return jsonify(list(map(lambda item: item.serialize(), users))), 200
@@ -126,7 +124,7 @@ def one_user_login():
 def reset_password_user():
     body = request.json
 
-    user = User.query.filter_by(email=body).one_or_none()       # Necesitamos el correo para enviar el mail de recuperación.
+    user = User.query.filter_by(email=body).one_or_none()
 
     if user is None:
         return jsonify("User not found"), 404
@@ -155,8 +153,7 @@ def reset_password_user():
 def update_password():
     user_id = get_jwt_identity()
     body = request.get_json()
-
-    user = User.query.filter_by(id=user_id).one_or_none()
+    user = User.query.filter_by(user_id=user_id).one_or_none()
 
     if user is not None:
         salt = b64encode(os.urandom(32)).decode("utf-8")
@@ -165,7 +162,7 @@ def update_password():
         if not new_password:
             return jsonify({"Error": "The password was not updated"}), 400
         
-        password = set_password(new_password, salt)
+        password = create_password(new_password, salt)
 
         user.salt = salt
         user.password = password
