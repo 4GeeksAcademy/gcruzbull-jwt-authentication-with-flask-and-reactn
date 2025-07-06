@@ -18,7 +18,7 @@ export const Login = () => {
     const handleChange = ({target}) => {
         setUser({
             ... user,
-            [target.Fullname]: target.value
+            [target.name]: target.value
         })
     }
 

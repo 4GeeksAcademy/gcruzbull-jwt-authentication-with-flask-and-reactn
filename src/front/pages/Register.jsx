@@ -16,7 +16,7 @@ export const Register = () => {
     const handleChange = ({target}) => {
         setUser({
             ... user,
-            [target.fullName]: target.value
+            [target.name]: target.value
         })
     }
 
