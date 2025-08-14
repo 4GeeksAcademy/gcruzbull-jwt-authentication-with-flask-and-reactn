@@ -27,7 +27,7 @@ export const Login = () => {
 
         const urlBackend = import.meta.env.VITE_BACKEND_URL;
 
-        const response = await fetch(`${urlBackend}/login`, {
+        const response = await fetch(`${urlBackend}/api/login`, {
             method: "POST",
             headers:{
                 "Content-Type": "application/json"
@@ -44,7 +44,7 @@ export const Login = () => {
                 payload: data.token
             })
             setTimeout(() => {
-                navigate("/private")
+                navigate("/demo")
             }, 2000)
         } else if (response.status === 400) {
             alert("Credenciales incorrectas")
@@ -92,7 +92,7 @@ export const Login = () => {
                 </div>
                 <div className="w-100"></div>
                 <div className="col-12 col-md-6 d-flex justify-content-between mt-1 p-2">
-                    <Link to="/register"> Registrarse </Link>
+                    <Link to="/signup"> Registrarse </Link>
                     <Link to="/recovery-password"> Recuperar contraseña </Link>
                 </div>
             </div>

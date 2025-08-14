@@ -41,32 +41,35 @@ def handle_hello():
     return jsonify(response_body), 200
 
 
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
+# @api.route('/hello', methods=['POST', 'GET'])
+# def handle_hello():
 
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
+#     response_body = {
+#         "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
+#     }
 
-    return jsonify(response_body), 200
+#     return jsonify(response_body), 200
 
 @api.route('/signup', methods = ['POST'])
 def add_user():
-    body = request.json()
+    body = request.json
 
     email = body.get("email", None) 
     full_name = body.get("full_name", None)
     password = body.get("password", None)
+
+    # Crear el salt antes de crear la contraseña
+    salt = b64encode(os.urandom(32)).decode("utf-8")
 
     # Creación del usuario:
     if email is None or full_name is None or password is None:
         return jsonify ('email, full_name, and password are mandatory'), 400
     else:
         user = User()           
-        User.email = email
-        User.full_name = full_name
-        User.password = create_password(password)
-        User.salt = b64encode(os.urandom(32)).decode("utf-8")
+        user.email = email
+        user.full_name = full_name
+        user.password = create_password(password, salt)
+        user.salt = salt
 
     # Transacción a la BD:
     db.session.add(user)

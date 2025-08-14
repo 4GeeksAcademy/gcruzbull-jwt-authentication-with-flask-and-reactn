@@ -3,7 +3,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer"
 import {Link, useNavigate} from "react-router-dom"
 
 const initialStateUser = {
-    fullName: "",
+    full_name: "",
     email: "",
     avatar: "",
     password: ""
@@ -29,7 +29,7 @@ export const Register = () => {
 
         const urlBackend = import.meta.env.VITE_BACKEND_URL;
 
-        const response = await fetch(`${urlBackend}/register`, {
+        const response = await fetch(`${urlBackend}/api/signup`, {
             method: "POST",
             headers:{
                 "Content-Type": "application/json"
@@ -62,9 +62,9 @@ export const Register = () => {
                                 type="text"
                                 placeholder="nombre apellido"
                                 id="btnNombre"
-                                name="fullName"
+                                name="full_name"
                                 onChange={handleChange}
-                                value={user.fullName}
+                                value={user.full_name}
                             />
                         </div>
                         <div className="form-group mb-3 ">

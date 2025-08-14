@@ -10,7 +10,7 @@ from api.models import db, User
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
-from flask_jwt_extended import JWTManager, jwt_required, get_jwt_indentity, create_access_token
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, create_access_token
 
 # from models import Person
 
@@ -46,6 +46,7 @@ setup_admin(app)
 setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
+
 app.register_blueprint(api, url_prefix='/api')
 
 # Handle/serialize errors like a JSON object
